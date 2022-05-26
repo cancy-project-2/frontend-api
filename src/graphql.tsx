@@ -1,6 +1,10 @@
 import { useState, createContext, useContext } from "react";
 import { createClient, Provider } from "urql";
 
+interface ContextValue {
+  resetQLClient?: () => void;
+}
+
 const makeQLClient = () =>
   createClient({
     url: process.env.GRAPHQL,
@@ -14,7 +18,7 @@ const makeQLClient = () =>
     },
   });
 
-const QLClientContext = createContext();
+const QLClientContext = createContext({} as ContextValue);
 
 export const QLClientProvider = ({ children }) => {
   const [client, setClient] = useState(makeQLClient());

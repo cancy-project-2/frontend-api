@@ -1,1 +1,1 @@
-export { default as QLClientProvider, useQLClient } from "./graphql";
+export { QLClientProvider, useQLClient } from "./graphql";
