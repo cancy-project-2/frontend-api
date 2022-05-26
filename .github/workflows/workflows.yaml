@@ -1,0 +1,36 @@
+name: Website (navbar) - Production
+on:
+  push:
+    branches:
+      - production
+jobs:
+  build:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          ref: refs/heads/production
+          fetch-depth: 1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+      - uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-js-${{ hashFiles('yarn.lock') }}
+      - run: yarn install
+      - run: yarn lint
+      - run: yarn test
+        env:
+          NODE_ENV: test
+      - run: yarn build
+        env:
+          NODE_ENV: production
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+      - uses: google-github-actions/setup-gcloud@v0
+      - run: gsutil -m rsync -c -r dist gs://cancy-website-bucket/api
+      - run: gsutil -m setmeta -h "Cache-Control:public, max-age=3600" gs://cancy-website-bucket/api/**
