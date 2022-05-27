@@ -1,1 +1,2 @@
-export { QLClientProvider, useQLClient } from "./graphql";
+import { Provider } from "urql";
+export { default as client } from "./graphql";
