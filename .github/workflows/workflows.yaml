@@ -1,4 +1,4 @@
-name: Website (navbar) - Production
+name: Website (api) - Production
 on:
   push:
     branches:
